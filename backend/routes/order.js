@@ -96,6 +96,7 @@ orderRouter.post("/place-order", async (req, res) => {
           product,
           transactionId,
           price,
+          paymentType: paymentType,
         });
 
         const options = {
@@ -132,7 +133,7 @@ orderRouter.post("/place-order", async (req, res) => {
           product,
           transactionId,
           price,
-          paymentStatus: "Cash On Delivery!",
+          paymentType: "Cash On Delivery!",
         });
 
         res.status(200).json({

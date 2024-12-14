@@ -13,11 +13,12 @@ const orderSchema = new Schema({
     {
       productId: String,
       name: String,
-      price: Number,
+      price: String,
       imgUrl: String,
       quantity: Number,
     },
   ],
+  paymentType: String,
   paymentStatus: { type: Boolean, default: false },
   orderStatus: { type: String, default: "Payment Processing" },
   price: Number,
