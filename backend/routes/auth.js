@@ -33,7 +33,7 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     // Find user by email
-    const user = await findOne({ email: email });
+    const user = await User.findOne({ email: email });
     if (!user) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
@@ -83,7 +83,7 @@ router.post("/logout", (req, res) => {
 router.get("/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const user = await findOne({ userId }, { name: 1, _id: 0 }); // Fetch only name
+    const user = await User.findOne({ userId }, { name: 1, _id: 0 }); // Fetch only name
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
