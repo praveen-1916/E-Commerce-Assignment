@@ -7,16 +7,16 @@ import Signup from "./pages/user/signup";
 import HomePage from "./pages/user/homepage";
 import ShoppingCartPage from "./pages/user/cart";
 import Shop from "./pages/user/shop";
-import OccasionsPage from "./pages/user/occasionspage";
 import Checkout from "./pages/user/checkout";
 import Product from "./pages/admin/product";
-import Complaints from "./pages/admin/complaints"; 
+import Complaints from "./pages/admin/complaints";
 import Orders from "./pages/admin/order";
 import Customers from "./pages/admin/customer";
 import CalendarPage from "./pages/admin/calendar";
 import NotFoundPage from "./pages/user/notfound";
 import { AuthProvider } from "./context/AuthContext";
 import Admin from "./pages/user/admin";
+import MyOrders from "./pages/user/MyOrders";
 
 function App() {
   return (
@@ -31,7 +31,7 @@ function App() {
           <Route path="/Contact" element={<Contact />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Signup" element={<Signup />} />
-          <Route path="/OccasionsPage" element={<OccasionsPage />} />
+          <Route path="/my-orders" element={<MyOrders />} />
           <Route path="/cart" element={<ShoppingCartPage />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/:productId" element={<ProductDetail />} />

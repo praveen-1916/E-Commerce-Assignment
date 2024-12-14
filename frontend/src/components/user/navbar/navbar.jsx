@@ -151,7 +151,7 @@ const ProfessionalNavbar = () => {
               {[
                 { path: "/HomePage", name: "HOME" },
                 { path: "/shop", name: "SHOP" },
-                { path: "/OccasionsPage", name: "OCCASIONS" },
+                { path: "/my-orders", name: "MY ORDERS" },
                 { path: "/contact", name: "CONTACT" },
                 { path: "/about", name: "ABOUT" },
               ].map(({ path, name }) => (

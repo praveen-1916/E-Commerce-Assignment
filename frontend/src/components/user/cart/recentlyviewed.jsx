@@ -100,7 +100,7 @@ const RecentlyViewed = () => {
         </h2>
       </div>
       <div className="p-4">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {products.map((product) => (
             <div
               key={product._id}
@@ -129,13 +129,21 @@ const RecentlyViewed = () => {
               </div>
               <div className="p-3 text-center">
                 <h4 className="font-semibold text-sm mb-1">{product.name}</h4>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center justify-center space-x-2">
                   <span className="text-gray-500 line-through text-xs">
                     ₹{product.price.split("₹")[1] || 400}
                   </span>
                   <span className="font-bold text-pink-600">
                     ₹{product.price.split("₹")[2] || product.price}
                   </span>
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="text-yellow-500">
+                      {"★".repeat(Math.floor(product.rating))}
+                      <span className="text-gray-300">
+                        {"★".repeat(5 - Math.floor(product.rating))}
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <Link to={`/${product._id}`}>
                   <button

@@ -58,24 +58,29 @@ orderRouter.post("/place-order", async (req, res) => {
     };
 
     // Extract product IDs
-    const getProductIds = (productsOrdered) => {
-      return productsOrdered.map((item) => item.productId);
-    };
+    // const getProductIds = (productsOrdered) => {
+    const product = productsOrdered.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      name: item.name,
+      price: item.price,
+      imgUrl: item.imgUrl,
+    }));
 
     // Find product details
-    const productDetailsFinder = async (productIds) => {
-      const products = await Product.find({ productId: { $in: productIds } });
-      return products;
-    };
+    // const productDetailsFinder = async (productIds) => {
+    //   const products = await Product.find({ productId: { $in: productIds } });
+    //   return products;
+    // };
 
     // Get user details
     const userDetails = await findUserDetails(userId);
 
     // Get product IDs array
-    const productIds = getProductIds(productsOrdered);
+    // const product = getProductIds(productsOrdered);
 
     // Get product details
-    const productDetails = await productDetailsFinder(productIds);
+    // const productDetails = await productDetailsFinder(productIds);
 
     switch (paymentType) {
       case "razorpay": {
@@ -88,7 +93,7 @@ orderRouter.post("/place-order", async (req, res) => {
           userId,
           userEmail: userDetails.email,
           userName: userDetails.name,
-          productIds,
+          product,
           transactionId,
           price,
         });
@@ -222,6 +227,30 @@ orderRouter.post("/verify-razorpay", async (req, res) => {
 orderRouter.get("/get-orders", async (req, res) => {
   try {
     const orders = await Order.find();
+
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching orders",
+      error: error.message,
+    });
+  }
+});
+
+orderRouter.get("/get-my-orders", async (req, res) => {
+  try {
+    const { userId } = req.body;
+    if (!userId) {
+      res.json({
+        success: false,
+        message: "Please login with your account first!",
+      });
+    }
+    const orders = await Order.find({ userId });
 
     res.status(200).json({
       success: true,

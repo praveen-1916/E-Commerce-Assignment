@@ -224,8 +224,10 @@ const CartItems = () => {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4">
-                <span className="font-medium text-base">Rs. {item.price}</span>
+              <div className="flex items-center sm:flex-row flex-col gap-4">
+                <span className="font-medium text-base sm:block hidden">
+                  Rs. {item.price}
+                </span>
 
                 <div className="flex items-center border rounded-md">
                   <button
@@ -273,16 +275,16 @@ const CartItems = () => {
           <h2 className="text-xl font-bold text-gray-800">Order Summary</h2>
         </div>
         <div className="p-4 space-y-4">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center sm:flex-row flex-col gap-2">
             <input
               type="text"
               placeholder="Enter voucher code"
               value={voucher}
               onChange={(e) => setVoucher(e.target.value)}
-              className="flex-grow border rounded-md px-3 py-2"
+              className="flex-grow border w-full rounded-md px-3 py-2"
             />
             <button
-              className="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600"
+              className="bg-pink-500 text-white sm:w-min w-full px-4 py-2 rounded-md hover:bg-pink-600"
               onClick={handleVoucherRedeem}
             >
               Redeem

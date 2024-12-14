@@ -223,7 +223,10 @@ const Checkout = () => {
 
     const productsOrdered = cartItems.map((item) => ({
       productId: item._id,
-      productQty: item.quantity,
+      quantity: item.quantity,
+      name: item.name,
+      imgUrl: item.img,
+      price: item.price,
     }));
 
     try {

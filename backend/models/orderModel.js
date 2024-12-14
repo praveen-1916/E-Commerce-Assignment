@@ -9,7 +9,15 @@ const orderSchema = new Schema({
   userId: String,
   userEmail: String,
   userName: String,
-  productIds: [String],
+  product: [
+    {
+      productId: String,
+      name: String,
+      price: Number,
+      imgUrl: String,
+      quantity: Number,
+    },
+  ],
   paymentStatus: { type: Boolean, default: false },
   orderStatus: { type: String, default: "Payment Processing" },
   price: Number,
