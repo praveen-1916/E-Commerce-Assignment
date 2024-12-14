@@ -99,14 +99,23 @@ const Login = () => {
               </div>
 
               {/* Submit Button */}
-              <motion.button
-                type="submit"
-                className="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold hover:bg-pink-600 transition duration-300 transform active:scale-95"
+              <motion.div
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                transition={{
+                  default: { duration: 0.5 },
+                  opacity: { delay: 0.8, duration: 1 },
+                }}
               >
-                Log In
-              </motion.button>
+                <button
+                  type="submit"
+                  className="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold hover:bg-pink-600 transition duration-300 transform active:scale-95"
+                >
+                  Log In
+                </button>
+              </motion.div>
             </form>
+
             <div className="mt-6 text-center">
               <p className="text-gray-600 text-sm">
                 Don't have an account?

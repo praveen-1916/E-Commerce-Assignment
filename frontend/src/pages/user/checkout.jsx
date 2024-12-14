@@ -95,7 +95,9 @@ const Checkout = () => {
     }
 
     try {
-      const cartResponse = await fetch(`http://localhost:3001/cart/${userId}`);
+      const cartResponse = await fetch(
+        `https://e-commerce-backend-rho-lovat.vercel.app/cart/${userId}`
+      );
       const cartData = await cartResponse.json();
 
       if (!cartData.success) {
@@ -117,7 +119,7 @@ const Checkout = () => {
 
       const productPromises = Object.values(groupedItems).map(async (item) => {
         const productResponse = await fetch(
-          `http://localhost:3001/product/${item.productId}`
+          `https://e-commerce-backend-rho-lovat.vercel.app/product/${item.productId}`
         );
         const productData = await productResponse.json();
 
@@ -196,16 +198,19 @@ const Checkout = () => {
 
     if (saveAddress) {
       try {
-        await fetch("http://localhost:3001/address/update-address", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            address: Object.values(address).join(", "),
-          }),
-        });
+        await fetch(
+          "https://e-commerce-backend-rho-lovat.vercel.app/address/update-address",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId,
+              address: Object.values(address).join(", "),
+            }),
+          }
+        );
       } catch (err) {
         console.error("Error saving address:", err);
         alertFunc(err.message, false);
@@ -222,21 +227,24 @@ const Checkout = () => {
     }));
 
     try {
-      const response = await fetch("http://localhost:3001/order/place-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          paymentType,
-          userId,
-          date,
-          time,
-          address: Object.values(address).join(", "),
-          price: total,
-          productsOrdered,
-        }),
-      });
+      const response = await fetch(
+        "https://e-commerce-backend-rho-lovat.vercel.app/order/place-order",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            paymentType,
+            userId,
+            date,
+            time,
+            address: Object.values(address).join(", "),
+            price: total,
+            productsOrdered,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -277,7 +285,7 @@ const Checkout = () => {
   const razorpayPaymentVerification = async (orderDetails) => {
     try {
       const responce = await fetch(
-        "http://localhost:3001/order/verify-razorpay",
+        "https://e-commerce-backend-rho-lovat.vercel.app/order/verify-razorpay",
         {
           method: "POST",
           headers: {

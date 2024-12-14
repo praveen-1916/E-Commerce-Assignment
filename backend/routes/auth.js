@@ -27,12 +27,13 @@ router.post("/signup", async (req, res) => {
     res.status(500).json({ error: "Error registering user" });
   }
 });
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     // Find user by email
-    const user = await findOne({ email });
+    const user = await findOne({ email: email });
     if (!user) {
       return res.status(400).json({ error: "Invalid email or password" });
     }

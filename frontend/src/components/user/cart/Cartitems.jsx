@@ -1,38 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { faTrash, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import emptyCart from '../../Images/empty_cart.webp';
-import { Link } from 'react-router-dom';
+import emptyCart from "../../Images/empty_cart.webp";
+import { Link } from "react-router-dom";
 
 const CartItems = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [voucher, setVoucher] = useState('');
+  const [voucher, setVoucher] = useState("");
   const [discountInfo, setDiscountInfo] = useState({
-    code: '',
+    code: "",
     percentage: 0,
-    message: ''
+    message: "",
   });
   const VOUCHERS = {
-    'OFF10': { percentage: 0.1, message: '10% discount applied!' },
+    OFF10: { percentage: 0.1, message: "10% discount applied!" },
   };
 
   useEffect(() => {
     const fetchCartItems = async () => {
-      const userId = sessionStorage.getItem('userId');
+      const userId = sessionStorage.getItem("userId");
       if (!userId) {
-        setError('Please login to view cart');
+        setError("Please login to view cart");
         setLoading(false);
         return;
       }
 
       try {
-        const cartResponse = await fetch(`https://ecommerse-assingment-backend.onrender.com/cart/${userId}`);
+        const cartResponse = await fetch(
+          `https://e-commerce-backend-rho-lovat.vercel.app/cart/${userId}`
+        );
         const cartData = await cartResponse.json();
 
         if (!cartData.success) {
-          setError(cartData.message || 'Failed to fetch cart');
+          setError(cartData.message || "Failed to fetch cart");
           setLoading(false);
           return;
         }
@@ -41,7 +43,7 @@ const CartItems = () => {
           if (!acc[item.productId]) {
             acc[item.productId] = {
               productId: item.productId,
-              productQty: item.productQty
+              productQty: item.productQty,
             };
           } else {
             acc[item.productId].productQty += item.productQty;
@@ -49,26 +51,29 @@ const CartItems = () => {
           return acc;
         }, {});
 
-        const productPromises = Object.values(groupedItems).map(async (item) => {
-          const productResponse = await fetch(`https://ecommerse-assingment-backend.onrender.com/product/${item.productId}`);
-          const productData = await productResponse.json();
-          
-          if (productData.success) {
-            return {
-              ...productData.product,
-              quantity: item.productQty,
-              cartItemId: item._id
-            };
+        const productPromises = Object.values(groupedItems).map(
+          async (item) => {
+            const productResponse = await fetch(
+              `https://e-commerce-backend-rho-lovat.vercel.app/product/${item.productId}`
+            );
+            const productData = await productResponse.json();
+
+            if (productData.success) {
+              return {
+                ...productData.product,
+                quantity: item.productQty,
+                cartItemId: item._id,
+              };
+            }
+            return null;
           }
-          return null;
-        });
+        );
 
         const products = await Promise.all(productPromises);
-        setCartItems(products.filter(product => product !== null));
+        setCartItems(products.filter((product) => product !== null));
         setLoading(false);
-
       } catch (err) {
-        setError('Error fetching cart items');
+        setError("Error fetching cart items");
         setLoading(false);
       }
     };
@@ -77,27 +82,30 @@ const CartItems = () => {
   }, []);
 
   const handleQuantityChange = async (itemId, change) => {
-    const item = cartItems.find(item => item._id === itemId);
+    const item = cartItems.find((item) => item._id === itemId);
     const newQuantity = item.quantity + change;
-    
+
     if (newQuantity >= 1) {
       try {
-        const userId = sessionStorage.getItem('userId');
-        const response = await fetch('https://ecommerse-assingment-backend.onrender.com/update-quantity', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            userId,
-            productId: itemId,
-            productQty: newQuantity
-          })
-        });
+        const userId = sessionStorage.getItem("userId");
+        const response = await fetch(
+          "https://e-commerce-backend-rho-lovat.vercel.app/cart/update-quantity",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId,
+              productId: itemId,
+              productQty: newQuantity,
+            }),
+          }
+        );
 
         const data = await response.json();
         if (data.success) {
-          const updatedItems = cartItems.map(item => {
+          const updatedItems = cartItems.map((item) => {
             if (item._id === itemId) {
               return { ...item, quantity: newQuantity };
             }
@@ -106,37 +114,42 @@ const CartItems = () => {
           setCartItems(updatedItems);
         }
       } catch (err) {
-        console.error('Error updating quantity:', err);
+        console.error("Error updating quantity:", err);
       }
     }
   };
 
   const handleRemoveItem = async (itemId) => {
     try {
-      const userId = sessionStorage.getItem('userId');
-      const response = await fetch('https://ecommerse-assingment-backend.onrender.com/delete-items', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId,
-          productId: itemId
-        })
-      });
-      
+      const userId = sessionStorage.getItem("userId");
+      const response = await fetch(
+        "https://e-commerce-backend-rho-lovat.vercel.app/cart/delete-items",
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId,
+            productId: itemId,
+          }),
+        }
+      );
+
       const data = await response.json();
       if (data.success) {
-        setCartItems(cartItems.filter(item => item._id !== itemId));
+        setCartItems(cartItems.filter((item) => item._id !== itemId));
       }
     } catch (err) {
-      console.error('Error removing item:', err);
+      console.error("Error removing item:", err);
     }
   };
 
   const calculateTotal = () => {
     const subtotal = cartItems.reduce((total, item) => {
-      return total + (parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity);
+      return (
+        total + parseFloat(item.price.replace(/[^\d.]/g, "")) * item.quantity
+      );
     }, 0);
     const discountedTotal = subtotal * (1 - discountInfo.percentage);
     return discountedTotal.toFixed(2);
@@ -144,18 +157,18 @@ const CartItems = () => {
 
   const handleVoucherRedeem = () => {
     const normalizedVoucher = voucher.toUpperCase().trim();
-    
+
     if (VOUCHERS[normalizedVoucher]) {
       setDiscountInfo({
         code: normalizedVoucher,
         percentage: VOUCHERS[normalizedVoucher].percentage,
-        message: VOUCHERS[normalizedVoucher].message
+        message: VOUCHERS[normalizedVoucher].message,
       });
     } else {
       setDiscountInfo({
-        code: '',
+        code: "",
         percentage: 0,
-        message: 'Invalid voucher code'
+        message: "Invalid voucher code",
       });
     }
   };
@@ -172,9 +185,11 @@ const CartItems = () => {
     return (
       <div className="bg-white shadow-md rounded-lg p-6 flex flex-col items-center justify-center">
         <img src={emptyCart} alt="Empty Cart" className="w-48 h-48 mb-4" />
-        <p className="text-lg text-gray-600 mb-4">{error || 'Your cart is empty'}</p>
-        <Link 
-          to="/shop" 
+        <p className="text-lg text-gray-600 mb-4">
+          {error || "Your cart is empty"}
+        </p>
+        <Link
+          to="/shop"
           className="px-4 py-2 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition-colors"
         >
           Continue Shopping
@@ -211,9 +226,9 @@ const CartItems = () => {
 
               <div className="flex items-center space-x-4">
                 <span className="font-medium text-base">Rs. {item.price}</span>
-                
+
                 <div className="flex items-center border rounded-md">
-                  <button 
+                  <button
                     onClick={() => handleQuantityChange(item._id, -1)}
                     className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                   >
@@ -225,19 +240,23 @@ const CartItems = () => {
                     readOnly
                     className="w-12 text-center border-none text-sm"
                   />
-                  <button 
+                  <button
                     onClick={() => handleQuantityChange(item._id, 1)}
                     className="px-2 py-1 text-gray-600 hover:bg-gray-100"
                   >
                     <FontAwesomeIcon icon={faPlus} className="text-sm" />
                   </button>
                 </div>
-                
+
                 <span className="font-medium text-base">
-                  Rs. {(parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity).toFixed(2)}
+                  Rs.{" "}
+                  {(
+                    parseFloat(item.price.replace(/[^\d.]/g, "")) *
+                    item.quantity
+                  ).toFixed(2)}
                 </span>
-                
-                <button 
+
+                <button
                   onClick={() => handleRemoveItem(item._id)}
                   className="text-red-500 hover:text-red-700 transition-colors"
                 >
@@ -262,33 +281,55 @@ const CartItems = () => {
               onChange={(e) => setVoucher(e.target.value)}
               className="flex-grow border rounded-md px-3 py-2"
             />
-            <button 
-              className="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600" 
+            <button
+              className="bg-pink-500 text-white px-4 py-2 rounded-md hover:bg-pink-600"
               onClick={handleVoucherRedeem}
             >
               Redeem
             </button>
           </div>
-          
+
           {discountInfo.message && (
-            <div className={`text-sm ${discountInfo.code ? 'text-green-600' : 'text-red-600'}`}>
+            <div
+              className={`text-sm ${
+                discountInfo.code ? "text-green-600" : "text-red-600"
+              }`}
+            >
               {discountInfo.message}
             </div>
           )}
-          
+
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>Rs. {cartItems.reduce((total, item) => 
-                total + (parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity), 
-                0).toFixed(2)}</span>
+              <span>
+                Rs.{" "}
+                {cartItems
+                  .reduce(
+                    (total, item) =>
+                      total +
+                      parseFloat(item.price.replace(/[^\d.]/g, "")) *
+                        item.quantity,
+                    0
+                  )
+                  .toFixed(2)}
+              </span>
             </div>
             {discountInfo.percentage > 0 && (
               <div className="flex justify-between text-green-600">
                 <span>Discount ({discountInfo.percentage * 100}%)</span>
-                <span>- Rs. {(cartItems.reduce((total, item) => 
-                  total + (parseFloat(item.price.replace(/[^\d.]/g, '')) * item.quantity), 
-                  0) * discountInfo.percentage).toFixed(2)}</span>
+                <span>
+                  - Rs.{" "}
+                  {(
+                    cartItems.reduce(
+                      (total, item) =>
+                        total +
+                        parseFloat(item.price.replace(/[^\d.]/g, "")) *
+                          item.quantity,
+                      0
+                    ) * discountInfo.percentage
+                  ).toFixed(2)}
+                </span>
               </div>
             )}
             <div className="flex justify-between">
@@ -300,12 +341,12 @@ const CartItems = () => {
               <span>Rs. {calculateTotal()}</span>
             </div>
           </div>
-          
-          <Link 
-            to={'/checkout'}
+
+          <Link
+            to={"/checkout"}
             state={{
               total: calculateTotal(),
-              discount: discountInfo.percentage
+              discount: discountInfo.percentage,
             }}
             className="block"
           >

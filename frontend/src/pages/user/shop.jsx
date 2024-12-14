@@ -40,7 +40,7 @@ const Shop = ({ category }) => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          "https://ecommerse-assingment-backend.onrender.com/get-product"
+          "https://e-commerce-backend-rho-lovat.vercel.app/product/get-product"
         );
         const data = await response.json();
         console.log(data.products);

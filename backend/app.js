@@ -15,8 +15,8 @@ import addressRouter from "./routes/address.js";
 const app = express();
 
 // Middleware
-app.use(cors());
 
+app.use(cors());
 app.use(json());
 app.use(cookieParser());
 
