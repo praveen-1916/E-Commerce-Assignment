@@ -354,14 +354,12 @@ const Shop = ({ category }) => {
                         </div>
 
                         <div className="flex items-center justify-center space-x-2">
-                          {/* <div className="text-yellow-500">
-                            <span>
-                              {"★".repeat(Math.floor(product.rating))}
-                            </span>
-                            <span>
+                          <div className="text-yellow-500">
+                            {"★".repeat(Math.floor(product.rating))}
+                            <span className="text-gray-300">
                               {"★".repeat(5 - Math.floor(product.rating))}
                             </span>
-                          </div> */}
+                          </div>
                           <span className="text-gray-600">
                             {product.rating}
                           </span>

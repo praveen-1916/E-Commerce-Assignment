@@ -67,6 +67,10 @@ app.use("/address", addressRouter);
 // Order route using
 app.use("/order", orderRouter);
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
