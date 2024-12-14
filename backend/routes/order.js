@@ -129,7 +129,7 @@ orderRouter.post("/place-order", async (req, res) => {
           userId,
           userEmail: userDetails.email,
           userName: userDetails.name,
-          productIds,
+          product,
           transactionId,
           price,
           paymentStatus: "Cash On Delivery!",
