@@ -19,7 +19,7 @@ const orderSchema = new Schema({
     },
   ],
   paymentType: String,
-  paymentStatus: { type: Boolean, default: false },
+  paymentStatus: { type: String, default: "Pending" },
   orderStatus: { type: String, default: "Payment Processing" },
   price: Number,
 });

@@ -96,7 +96,7 @@ orderRouter.post("/place-order", async (req, res) => {
           product,
           transactionId,
           price,
-          paymentType: paymentType,
+          paymentType: "Razorpay",
         });
 
         const options = {
@@ -134,7 +134,7 @@ orderRouter.post("/place-order", async (req, res) => {
           transactionId,
           price,
           paymentType: "Cash On Delivery!",
-          orderStatus: "Order Confirmed",
+          orderStatus: "Order Placed",
         });
 
         res.status(200).json({
@@ -206,14 +206,14 @@ orderRouter.post("/verify-razorpay", async (req, res) => {
     const paymentData = await razorpayInstance.orders.fetch(razorpay_order_id);
     if (paymentData.status === "paid") {
       const orderData = await Order.findById(paymentData.receipt);
-      if (orderData.paymentStatus) {
+      if (orderData.paymentStatus == "Success") {
         res.json({ success: false, message: "Payment already verified" });
       }
 
       //making payment status to true
       await Order.findByIdAndUpdate(orderData._id, {
-        paymentStatus: true,
-        orderStatus: "Order Confirmed",
+        paymentStatus: "Success",
+        orderStatus: "Order Placed",
       });
       res.json({ success: true, message: "Order Placed successfully" });
     } else {
@@ -246,9 +246,9 @@ orderRouter.get("/get-orders", async (req, res) => {
   }
 });
 
-orderRouter.get("/get-my-orders", async (req, res) => {
+orderRouter.get("/get-my-orders/:userId", async (req, res) => {
   try {
-    const userId = req.header("userId");
+    const { userId } = req.params;
     if (!userId) {
       res.json({
         success: false,

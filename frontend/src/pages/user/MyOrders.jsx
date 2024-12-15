@@ -16,12 +16,13 @@ function MyOrders() {
   const getOrders = async () => {
     try {
       const response = await fetch(
-        "https://e-commerce-backend-rho-lovat.vercel.app/order/get-my-orders",
+        "https://e-commerce-backend-rho-lovat.vercel.app/order/get-my-orders" +
+          userId,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            userId: userId,
+            // userId: userId,
           },
         }
       );
