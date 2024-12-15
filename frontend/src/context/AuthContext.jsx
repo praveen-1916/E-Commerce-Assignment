@@ -5,6 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Axios instance with default configurations
   const api = axios.create({
@@ -20,18 +21,20 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signup = async (name, email, password) => {
+    setLoading(true);
     const response = await api.post("/auth/signup", { name, email, password });
     const { userId } = response.data;
 
     // Store userId in sessionStorage
     sessionStorage.setItem("userId", userId);
-
     setUser({ name, email, userId });
+    setLoading(false);
     return userId;
   };
 
   const login = async (email, password) => {
     try {
+      setLoading(true);
       const response = await api.post("/auth/login", { email, password });
 
       if (response.data.message === "Login successful") {
@@ -42,12 +45,13 @@ export const AuthProvider = ({ children }) => {
 
         // Update the state with the logged-in user
         setUser({ email, userId });
-
+        setLoading(false);
         return "Login successful";
       } else {
         throw new Error("Login failed");
       }
     } catch (err) {
+      setLoading(false);
       if (err.response?.data?.error === "Account is suspended") {
         alert(
           "Your account is suspended from further notice due to unusual activity"
@@ -72,7 +76,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, signup, login, logout, fetchUserName }}
+      value={{ user, signup, login, logout, fetchUserName, loading }}
     >
       {children}
     </AuthContext.Provider>

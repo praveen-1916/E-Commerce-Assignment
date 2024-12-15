@@ -134,6 +134,7 @@ orderRouter.post("/place-order", async (req, res) => {
           transactionId,
           price,
           paymentType: "Cash On Delivery!",
+          orderStatus: "Order Confirmed",
         });
 
         res.status(200).json({
@@ -210,7 +211,10 @@ orderRouter.post("/verify-razorpay", async (req, res) => {
       }
 
       //making payment status to true
-      await Order.findByIdAndUpdate(orderData._id, { paymentStatus: true });
+      await Order.findByIdAndUpdate(orderData._id, {
+        paymentStatus: true,
+        orderStatus: "Order Confirmed",
+      });
       res.json({ success: true, message: "Order Placed successfully" });
     } else {
       res.json({
