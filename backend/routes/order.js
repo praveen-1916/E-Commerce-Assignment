@@ -248,7 +248,7 @@ orderRouter.get("/get-orders", async (req, res) => {
 
 orderRouter.get("/get-my-orders", async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.headers;
     if (!userId) {
       res.json({
         success: false,

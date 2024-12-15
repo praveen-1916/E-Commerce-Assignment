@@ -21,8 +21,8 @@ function MyOrders() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            userId: userId,
           },
-          body: JSON.stringify(userId),
         }
       );
       const data = await response.json();
